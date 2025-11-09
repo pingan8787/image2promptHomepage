@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide - Image2Prompt</title>
+    <meta name="description"
+        content="Step-by-step instructions for installing, configuring, and using Image2Prompt. Learn troubleshooting tips and best practices.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Animation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #0f172a;
+            top: 0 !important;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .nav-link {
+            color: #475569;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .nav-link.active {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .step-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .faq-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .tab-button {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .tab-button.active {
+            background: #2563eb;
+            color: white;
+            border-color: #1d4ed8;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body data-page="guide" data-language="en">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
+        <div class="container">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index-en.html" class="text-xl font-bold text-gradient">Image2Prompt</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="index-en.html" class="nav-link">Home</a>
+                    <a href="features-en.html" class="nav-link">Features</a>
+                    <a href="guide-en.html" class="nav-link active">Guide</a>
+                    <a href="https://github.com/pingan8787/image2prompt" class="nav-link">GitHub</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select class="language-select bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium"
+                        aria-label="Language selector">
+                        <option value="zh-CN">中文</option>
+                        <option value="en" selected>English</option>
+                    </select>
+                    <a href="guide-en.html#installation" class="btn-primary">
+                        Install Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pt-32 pb-16">
+        <div class="container">
+            <div class="text-center animate-fade-in">
+                <h1 class="text-5xl font-black mb-6">
+                    <span class="gradient-text">User Guide</span>
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+                    Detailed installation steps, configuration walkthroughs, and productivity tips to help you master
+                    Image2Prompt in minutes.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tabs -->
+    <section class="pb-8">
+        <div class="container">
+            <div class="flex justify-center space-x-4 mb-8">
+                <button class="tab-button active" data-tab="installation">
+                    Installation
+                </button>
+                <button class="tab-button" data-tab="configuration">
+                    Configuration
+                </button>
+                <button class="tab-button" data-tab="usage">
+                    Usage Tips
+                </button>
+                <button class="tab-button" data-tab="troubleshooting">
+                    Troubleshooting
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation -->
+    <div id="installation" class="tab-content active">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">Install the extension</h2>
+                    <p class="text-xl text-slate-600">Get up and running in three simple steps</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <div class="step-card mb-8">
+                        <div class="flex items-start space-x-6">
+                            <div class="step-number">1</div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4 text-slate-900">Download the package</h3>
+                                <p class="text-slate-600 mb-6">
+                                    Grab the latest Image2Prompt build from GitHub.
+                                </p>
+                                <div class="space-y-4">
+                                    <div class="card p-4 flex items-center justify-between">
+                                        <div>
+                                            <p class="font-semibold text-slate-900">Official Repository</p>
+                                            <p class="text-slate-500 text-sm">pingan8787/image2prompt</p>
+                                        </div>
+                                        <a href="https://github.com/pingan8787/image2prompt" target="_blank"
+                                            class="btn-secondary">Open Repo</a>
+                                    </div>
+                                    <ul class="list-disc list-inside text-slate-600 space-y-2">
+                                        <li>Visit the GitHub repository</li>
+                                        <li>Click “Code” → “Download ZIP”</li>
+                                        <li>Unzip the archive to a local folder</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card mb-8">
+                        <div class="flex items-start space-x-6">
+                            <div class="step-number">2</div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4 text-slate-900">Enable developer mode</h3>
+                                <p class="text-slate-600 mb-6">
+                                    Turn on developer mode inside your Chromium-based browser.
+                                </p>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="card p-4">
+                                        <h4 class="font-semibold text-slate-900 mb-3">Chrome</h4>
+                                        <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                                            <li>Open chrome://extensions</li>
+                                            <li>Toggle on “Developer mode” (top right)</li>
+                                            <li>New buttons will appear on the page</li>
+                                        </ol>
+                                    </div>
+                                    <div class="card p-4">
+                                        <h4 class="font-semibold text-slate-900 mb-3">Edge</h4>
+                                        <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                                            <li>Open edge://extensions</li>
+                                            <li>Enable “Developer mode” at the bottom left</li>
+                                            <li>Advanced options become available</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="flex items-start space-x-6">
+                            <div class="step-number">3</div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4 text-slate-900">Load the extension</h3>
+                                <p class="text-slate-600 mb-6">
+                                    Install Image2Prompt from the folder you downloaded.
+                                </p>
+                                <ul class="list-disc list-inside text-slate-600 space-y-2 mb-4">
+                                    <li>Click “Load unpacked”</li>
+                                    <li>Select the Image2Prompt folder</li>
+                                    <li>The extension installs automatically</li>
+                                </ul>
+                                <p class="text-green-600 font-medium">
+                                    ✓ Once installed, the icon appears in the toolbar.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Configuration -->
+    <div id="configuration" class="tab-content">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">Configure your setup</h2>
+                    <p class="text-xl text-slate-600">Connect APIs and personalize the workflow</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="card p-8">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-6">Gemini API</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold text-slate-900 mb-2">Get an API key</p>
+                                <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                                    <li>Visit Google AI Studio</li>
+                                    <li>Sign in with your Google account</li>
+                                    <li>Click “Create API Key”</li>
+                                    <li>Copy the generated key</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-900 mb-2">Configure the extension</p>
+                                <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                                    <li>Click the Image2Prompt icon</li>
+                                    <li>Open “Settings”</li>
+                                    <li>Pick “Gemini 2.5 Flash” in model list</li>
+                                    <li>Paste your API key</li>
+                                    <li>Save changes</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-8">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-6">Zhipu AI</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold text-slate-900 mb-2">Generate a key</p>
+                                <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                                    <li>Go to the Zhipu AI open platform</li>
+                                    <li>Create an account and log in</li>
+                                    <li>Open the console and create an API key</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-slate-900 mb-2">Apply the configuration</p>
+                                <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                                    <li>Open Image2Prompt settings</li>
+                                    <li>Select “GLM-4V” as the model</li>
+                                    <li>Paste the API key</li>
+                                    <li>Adjust other params if needed</li>
+                                    <li>Save the settings</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 mt-12">
+                    <div class="card p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Advanced settings</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Choose default output language</li>
+                            <li>• Switch interface language</li>
+                            <li>• Enable auto language detection</li>
+                        </ul>
+                    </div>
+                    <div class="card p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Image filtering</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Minimum size requirement</li>
+                            <li>• Domain allow / deny list</li>
+                            <li>• Supported formats overview</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Usage -->
+    <div id="usage" class="tab-content">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">Daily workflow</h2>
+                    <p class="text-xl text-slate-600">Master the basics and power features</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="card p-8">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">From any webpage</h3>
+                        <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                            <li>Open a page that contains images</li>
+                            <li>Hover over an image you like</li>
+                            <li>Click the Image2Prompt icon on the corner</li>
+                            <li>Wait for the prompt to generate</li>
+                            <li>The prompt copies to your clipboard automatically</li>
+                        </ol>
+                    </div>
+                    <div class="card p-8">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">From local images</h3>
+                        <ol class="list-decimal list-inside text-slate-600 space-y-2">
+                            <li>Click the extension icon</li>
+                            <li>Open “Settings”</li>
+                            <li>Upload a file under “Local Images”</li>
+                            <li>Click “Generate Prompt”</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-8 mt-12">
+                    <div class="card p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Advanced tools</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Add custom instructions (e.g. “make it cyberpunk”)</li>
+                            <li>• Combine original prompt + extra guidance</li>
+                            <li>• Review and regenerate from history</li>
+                        </ul>
+                    </div>
+                    <div class="card p-8">
+                        <h3 class="text-xl font-bold text-slate-900 mb-3">Best practices</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Pick clean, high-quality reference images</li>
+                            <li>• Add style descriptors in templates</li>
+                            <li>• Set default output platforms for speed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div id="troubleshooting" class="tab-content">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">Troubleshooting</h2>
+                    <p class="text-xl text-slate-600">Solve the most common issues in minutes</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="faq-item p-6">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">Installation failed</h3>
+                        <p class="text-slate-600 mb-3">Please verify the following:</p>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Browser version meets minimum (Chrome/Edge 88+)</li>
+                            <li>• Developer mode is enabled</li>
+                            <li>• The folder is complete and not corrupted</li>
+                            <li>• Re-download and unzip if needed</li>
+                        </ul>
+                    </div>
+
+                    <div class="faq-item p-6">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">API key invalid</h3>
+                        <p class="text-slate-600 mb-3">Try these fixes:</p>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Remove extra spaces when pasting</li>
+                            <li>• Confirm the key is still active</li>
+                            <li>• Check your account balance or quota</li>
+                            <li>• Generate a new key and update settings</li>
+                        </ul>
+                    </div>
+
+                    <div class="faq-item p-6">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">Poor prompt quality</h3>
+                        <p class="text-slate-600 mb-3">Optimization tips:</p>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Use sharp, well-lit reference images</li>
+                            <li>• Switch to another AI model</li>
+                            <li>• Add custom instructions for context</li>
+                            <li>• Adjust template wording</li>
+                        </ul>
+                    </div>
+
+                    <div class="faq-item p-6">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">Extension icon missing</h3>
+                        <p class="text-slate-600 mb-3">Possible causes:</p>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Image does not meet the minimum size (256×256)</li>
+                            <li>• Current domain is blocked</li>
+                            <li>• Refresh the page or restart the browser</li>
+                            <li>• Make sure the extension is enabled</li>
+                            <li>• Clear cache if the issue persists</li>
+                        </ul>
+                    </div>
+
+                    <div class="faq-item p-6">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">Slow or timed-out requests</h3>
+                        <p class="text-slate-600 mb-3">What to check:</p>
+                        <ul class="space-y-2 text-slate-600">
+                            <li>• Internet speed and stability</li>
+                            <li>• Try a faster AI model</li>
+                            <li>• Avoid peak hours if possible</li>
+                            <li>• Review API provider status</li>
+                            <li>• Upgrade your API plan if needed</li>
+                        </ul>
+                    </div>
+
+                    <div class="faq-item p-6">
+                        <h3 class="text-xl font-semibold text-slate-900 mb-4">Need more help?</h3>
+                        <p class="text-slate-600 mb-3">Contact the maintainers via GitHub issues or the community
+                            Discord. We respond within 24 hours on weekdays.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CTA -->
+    <section class="section-padding bg-slate-50">
+        <div class="container">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="bg-white rounded-3xl p-12 border border-slate-200 shadow-lg">
+                    <h2 class="text-4xl font-bold mb-6 text-slate-900">Ready to create?</h2>
+                    <p class="text-xl text-slate-600 mb-8">
+                        Follow this guide to install, configure, and start generating high-quality prompts today.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="guide-en.html#installation" class="btn-primary text-lg px-8 py-4">
+                            🚀 Install Extension
+                        </a>
+                        <a href="features-en.html" class="btn-secondary text-lg px-8 py-4">
+                            See All Features →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="container">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-gradient mb-4">Image2Prompt</h3>
+                <p class="text-slate-600 mb-6">Purpose-built for creators, designers, and AI professionals.</p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://github.com/pingan8787/image2prompt"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M12 .5C5.648.5.5 5.648.5 12c0 5.086 3.292 9.392 7.865 10.918.575.101.785-.249.785-.553 0-.272-.01-1.176-.016-2.133-3.2.696-3.877-1.371-3.877-1.371-.523-1.331-1.277-1.686-1.277-1.686-1.044-.714.079-.699.079-.699 1.155.081 1.764 1.186 1.764 1.186 1.027 1.76 2.695 1.252 3.352.958.104-.744.402-1.252.731-1.54-2.554-.291-5.238-1.277-5.238-5.682 0-1.255.446-2.281 1.178-3.086-.118-.29-.51-1.461.111-3.047 0 0 .962-.308 3.154 1.178a10.95 10.95 0 0 1 2.872-.386c.974.005 1.955.132 2.873.386 2.19-1.486 3.15-1.178 3.15-1.178.624 1.586.232 2.757.115 3.047.734.805 1.176 1.831 1.176 3.086 0 4.416-2.69 5.388-5.258 5.675.414.356.78 1.056.78 2.131 0 1.538-.014 2.777-.014 3.154 0 .307.208.66.79.548C20.213 21.387 23.5 17.083 23.5 12c0-6.352-5.148-11.5-11.5-11.5Z" />
+                        </svg>
+                        <span class="text-lg font-medium">GitHub</span>
+                    </a>
+                    <a href="https://x.com/Chris1993Coding"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 0 0 1.88-2.37 8.6 8.6 0 0 1-2.74 1.05 4.28 4.28 0 0 0-7.29 3.9A12.15 12.15 0 0 1 4 4.4a4.29 4.29 0 0 0 1.33 5.72 4.26 4.26 0 0 1-1.94-.54v.05a4.28 4.28 0 0 0 3.44 4.19c-.45.12-.92.18-1.4.07a4.29 4.29 0 0 0 4 2.98 8.6 8.6 0 0 1-5.33 1.84c-.35 0-.7-.02-1.04-.06A12.12 12.12 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.35-.01-.53A8.4 8.4 0 0 0 22.46 6Z" />
+                        </svg>
+                        <span class="text-lg font-medium">Twitter</span>
+                    </a>
+                    <a href="https://wisemindai.app/"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+                            stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path
+                                d="M9 4.5c-1.657 0-3 1.343-3 3v1.5c-1.105.5-2 1.65-2 3.2C4 15.5 6.239 18 9 18v3l3-1.5 3 1.5v-3c2.761 0 5-2.5 5-5.8 0-1.55-.895-2.7-2-3.2V7.5c0-1.657-1.343-3-3-3" />
+                            <path d="M9 8h.5M9 11h.5M15 8h-.5M15 11h-.5" />
+                        </svg>
+                        <span class="text-lg font-medium">WiseMindAI</span>
+                    </a>
+                </div>
+                <p class="text-slate-500 text-sm">
+                    © 2025 Image2Prompt. Open-source and free forever.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+
+</html>

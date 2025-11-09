@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image2Prompt - 一键将图片转换为AI提示词</title>
+    <meta name="description" content="Image2Prompt 是一款轻量级浏览器扩展，帮助创作者、设计师和AI用户一键将网页图片生成Prompt提示词，支持多种AI模型和语言。">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+
+    <!-- Splide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+
+    <!-- 自定义样式 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #0f172a;
+            top: 0 !important;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .nav-link {
+            color: #475569;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .nav-link.active {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .demo-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            height: 6px;
+            border-radius: 3px;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        .feature-icon {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .stats-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .stats-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-4px);
+        }
+
+        .testimonial-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .testimonial-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .model-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .model-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .model-card.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body data-page="index" data-language="zh-CN">
+    <!-- 粒子背景 -->
+    <div id="particle-bg" class="particle-bg"></div>
+
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
+        <div class="container">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-gradient">Image2Prompt</h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="#home" class="nav-link active">首页</a>
+                    <a href="features.html" class="nav-link">功能介绍</a>
+                    <a href="guide.html" class="nav-link">使用指南</a>
+                    <a href="https://github.com/pingan8787/image2prompt" class="nav-link">GitHub</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select class="language-select bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium" aria-label="Language selector">
+                        <option value="zh-CN">中文</option>
+                        <option value="en">English</option>
+                    </select>
+                    <a href="guide.html#installation" class="btn-primary">
+                        立即安装
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section id="home" class="section-padding pt-32">
+        <div class="container">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="animate-fade-in">
+                    <h1 class="text-5xl md:text-7xl font-black leading-tight mb-6">
+                        <span class="gradient-text">一键将图片转换为</span><br>
+                        <span class="text-slate-900">AI 提示词</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8">
+                        Image2Prompt 是一款为创作者、设计师和 AI 用户设计的轻量级浏览器扩展，
+                        帮助您从任何网页图片中瞬间生成专业的 AI 提示词。
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="guide.html#installation" class="btn-primary text-lg px-8 py-4">
+                            🚀 立即安装扩展
+                        </a>
+                        <button class="btn-secondary text-lg px-8 py-4">
+                            📺 观看演示
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 支持的AI模型 -->
+    <section class="section-padding bg-slate-50">
+        <div class="container">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">支持多种先进 AI 模型</h2>
+                <p class="text-xl text-slate-600">选择最适合您需求的 AI 模型</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="model-card p-8 active" data-model="gemini">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mr-4 text-white font-bold text-xl">
+                            G</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900">Gemini 2.5 Flash</h3>
+                            <p class="text-slate-600">Google 最新 AI 模型</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 mb-6">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>快速响应，低延迟</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>优秀的视觉理解能力</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>支持复杂场景分析</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>免费额度充足</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">✓
+                            当前选中</span>
+                    </div>
+                </div>
+
+                <div class="model-card p-8" data-model="zhipu">
+                    <div class="flex items-center mb-6">
+                        <div
+                            class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center mr-4 text-white font-bold text-xl">
+                            智</div>
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900">智谱 GLM-4V</h3>
+                            <p class="text-slate-600">国产多模态 AI 模型</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 text-slate-600 mb-6">
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>中文理解能力优秀</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>本土化服务支持</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>合规性保障</li>
+                        <li class="flex items-center"><span class="text-green-500 mr-2">✓</span>灵活的定价策略</li>
+                    </ul>
+                    <div class="mt-4">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-600">点击切换</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用统计 -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">深受用户信赖</h2>
+                <p class="text-xl text-slate-600">全球创作者的共同选择</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="stats-card">
+                    <div class="text-4xl font-bold text-blue-600 mb-2" data-count="50000">0</div>
+                    <p class="text-slate-600 font-medium">活跃用户</p>
+                </div>
+                <div class="stats-card">
+                    <div class="text-4xl font-bold text-blue-600 mb-2" data-count="1000000">0</div>
+                    <p class="text-slate-600 font-medium">生成次数</p>
+                </div>
+                <div class="stats-card">
+                    <div class="text-4xl font-bold text-blue-600 mb-2" data-count="20">0</div>
+                    <p class="text-slate-600 font-medium">支持语言</p>
+                </div>
+                <div class="stats-card">
+                    <div class="text-4xl font-bold text-blue-600 mb-2" data-count="99">0</div>
+                    <p class="text-slate-600 font-medium">满意度%</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品特色 -->
+    <section class="section-padding bg-slate-50">
+        <div class="container">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">为什么选择 Image2Prompt</h2>
+                <p class="text-xl text-slate-600">专业、轻量、开源的 AI 提示词生成工具</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">⚡</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">一键生成</h3>
+                    <p class="text-slate-600 leading-relaxed">只需点击一下，即可将任何图片转换为详细的 AI 提示词，无需复杂操作。</p>
+                </div>
+
+                <div class="card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">🎨</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">多模型支持</h3>
+                    <p class="text-slate-600 leading-relaxed">支持 Gemini 2.5 Flash 和智谱 GLM-4V 等多种先进 AI 模型。</p>
+                </div>
+
+                <div class="card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">🌍</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">多语言</h3>
+                    <p class="text-slate-600 leading-relaxed">支持 20 种语言，让全球用户都能轻松使用。</p>
+                </div>
+
+                <div class="card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">🔓</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">开源免费</h3>
+                    <p class="text-slate-600 leading-relaxed">完全开源，永久免费使用，无隐藏费用。</p>
+                </div>
+
+                <div class="card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">🪶</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">轻量级</h3>
+                    <p class="text-slate-600 leading-relaxed">采用现代设计，不依赖第三方库，运行流畅。</p>
+                </div>
+
+                <div class="card p-8 text-center">
+                    <div class="feature-icon mx-auto mb-6">⚙️</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">高度定制</h3>
+                    <p class="text-slate-600 leading-relaxed">支持自定义提示词模板、平台跳转和多种个性化设置。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户评价 -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">用户怎么说</h2>
+                <p class="text-xl text-slate-600">来自全球用户的真实反馈</p>
+            </div>
+
+            <div class="splide" id="testimonial-slider">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        <li class="splide__slide">
+                            <div class="testimonial-card mx-4">
+                                <div class="flex items-center mb-6">
+                                    <div
+                                        class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4 text-white font-bold">
+                                        张</div>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-900">张设计师</h4>
+                                        <p class="text-slate-600 text-sm">UI/UX 设计师</p>
+                                    </div>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed mb-6">
+                                    "Image2Prompt 极大地提高了我的工作效率！现在我可以快速从参考图片中提取设计元素，
+                                    生成详细的 AI 提示词来创建新的设计方案。"
+                                </p>
+                                <div class="flex text-yellow-400 text-xl">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="splide__slide">
+                            <div class="testimonial-card mx-4">
+                                <div class="flex items-center mb-6">
+                                    <div
+                                        class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mr-4 text-white font-bold">
+                                        李</div>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-900">李创作者</h4>
+                                        <p class="text-slate-600 text-sm">数字艺术家</p>
+                                    </div>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed mb-6">
+                                    "作为一个数字艺术家，这个工具帮我节省了大量时间。
+                                    它生成的提示词非常准确，让我能够快速创作出想要的作品。"
+                                </p>
+                                <div class="flex text-yellow-400 text-xl">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="splide__slide">
+                            <div class="testimonial-card mx-4">
+                                <div class="flex items-center mb-6">
+                                    <div
+                                        class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mr-4 text-white font-bold">
+                                        王</div>
+                                    <div>
+                                        <h4 class="font-semibold text-slate-900">王开发者</h4>
+                                        <p class="text-slate-600 text-sm">全栈开发者</p>
+                                    </div>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed mb-6">
+                                    "开源免费的工具能做到这种程度真的很惊艳！界面简洁，功能强大，
+                                    而且支持多种 AI 模型，是我日常工作中的必备工具。"
+                                </p>
+                                <div class="flex text-yellow-400 text-xl">
+                                    ⭐⭐⭐⭐⭐
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 立即开始 -->
+    <section class="section-padding bg-slate-50">
+        <div class="container">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="bg-white rounded-3xl p-12 border border-slate-200 shadow-lg">
+                    <h2 class="text-4xl font-bold mb-6 text-slate-900">准备开始您的 AI 创作之旅？</h2>
+                    <p class="text-xl text-slate-600 mb-8">
+                        立即安装 Image2Prompt，体验一键生成 AI 提示词的便捷
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="guide.html#installation" class="btn-primary text-lg px-8 py-4">
+                            🚀 立即安装扩展
+                        </a>
+                        <a href="features.html" class="btn-secondary text-lg px-8 py-4">
+                            了解更多功能 →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="container">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-gradient mb-4">Image2Prompt</h3>
+                <p class="text-slate-600 mb-6">为创作者、设计师和 AI 用户设计的专业工具</p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://github.com/pingan8787/image2prompt"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M12 .5C5.648.5.5 5.648.5 12c0 5.086 3.292 9.392 7.865 10.918.575.101.785-.249.785-.553 0-.272-.01-1.176-.016-2.133-3.2.696-3.877-1.371-3.877-1.371-.523-1.331-1.277-1.686-1.277-1.686-1.044-.714.079-.699.079-.699 1.155.081 1.764 1.186 1.764 1.186 1.027 1.76 2.695 1.252 3.352.958.104-.744.402-1.252.731-1.54-2.554-.291-5.238-1.277-5.238-5.682 0-1.255.446-2.281 1.178-3.086-.118-.29-.51-1.461.111-3.047 0 0 .962-.308 3.154 1.178a10.95 10.95 0 0 1 2.872-.386c.974.005 1.955.132 2.873.386 2.19-1.486 3.15-1.178 3.15-1.178.624 1.586.232 2.757.115 3.047.734.805 1.176 1.831 1.176 3.086 0 4.416-2.69 5.388-5.258 5.675.414.356.78 1.056.78 2.131 0 1.538-.014 2.777-.014 3.154 0 .307.208.66.79.548C20.213 21.387 23.5 17.083 23.5 12c0-6.352-5.148-11.5-11.5-11.5Z" />
+                        </svg>
+                        <span class="text-lg font-medium">GitHub</span>
+                    </a>
+                    <a href="https://x.com/Chris1993Coding"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 0 0 1.88-2.37 8.6 8.6 0 0 1-2.74 1.05 4.28 4.28 0 0 0-7.29 3.9A12.15 12.15 0 0 1 4 4.4a4.29 4.29 0 0 0 1.33 5.72 4.26 4.26 0 0 1-1.94-.54v.05a4.28 4.28 0 0 0 3.44 4.19c-.45.12-.92.18-1.4.07a4.29 4.29 0 0 0 4 2.98 8.6 8.6 0 0 1-5.33 1.84c-.35 0-.7-.02-1.04-.06A12.12 12.12 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.35-.01-.53A8.4 8.4 0 0 0 22.46 6Z" />
+                        </svg>
+                        <span class="text-lg font-medium">Twitter</span>
+                    </a>
+                    <a href="https://wisemindai.app/"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"
+                            stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path
+                                d="M9 4.5c-1.657 0-3 1.343-3 3v1.5c-1.105.5-2 1.65-2 3.2C4 15.5 6.239 18 9 18v3l3-1.5 3 1.5v-3c2.761 0 5-2.5 5-5.8 0-1.55-.895-2.7-2-3.2V7.5c0-1.657-1.343-3-3-3" />
+                            <path d="M9 8h.5M9 11h.5M15 8h-.5M15 11h-.5" />
+                        </svg>
+                        <span class="text-lg font-medium">WiseMindAI</span>
+                    </a>
+                </div>
+                <p class="text-slate-500 text-sm">
+                    © 2025 Image2Prompt. 开源免费，永久使用。
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+
+</html>

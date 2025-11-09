@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用指南 - Image2Prompt</title>
+    <meta name="description" content="详细的 Image2Prompt 安装和使用指南，包括配置教程、使用技巧和故障排除。">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- 动画库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <!-- 自定义样式 -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #0f172a;
+            top: 0 !important;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .nav-link {
+            color: #475569;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .nav-link.active {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .step-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .step-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-4px);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .code-block {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+        }
+
+        .faq-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .faq-item:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .tab-button {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body data-page="guide" data-language="zh-CN">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
+        <div class="container">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold text-gradient">Image2Prompt</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="index.html" class="nav-link">首页</a>
+                    <a href="features.html" class="nav-link">功能介绍</a>
+                    <a href="guide.html" class="nav-link active">使用指南</a>
+                    <a href="https://github.com/pingan8787/image2prompt" class="nav-link">GitHub</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select class="language-select bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium" aria-label="Language selector">
+                        <option value="zh-CN">中文</option>
+                        <option value="en">English</option>
+                    </select>
+                    <a href="guide.html#installation" class="btn-primary">
+                        立即安装
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <section class="pt-32 pb-16">
+        <div class="container">
+            <div class="text-center animate-fade-in">
+                <h1 class="text-5xl font-black mb-6">
+                    <span class="gradient-text">使用指南</span>
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+                    详细的安装教程、配置说明和使用技巧，帮助您快速上手 Image2Prompt
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 标签页导航 -->
+    <section class="pb-8">
+        <div class="container">
+            <div class="flex justify-center space-x-4 mb-8">
+                <button class="tab-button active" data-tab="installation">
+                    安装指南
+                </button>
+                <button class="tab-button" data-tab="configuration">
+                    配置教程
+                </button>
+                <button class="tab-button" data-tab="usage">
+                    使用教程
+                </button>
+                <button class="tab-button" data-tab="troubleshooting">
+                    故障排除
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 安装指南 -->
+    <div id="installation" class="tab-content active">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">安装指南</h2>
+                    <p class="text-xl text-slate-600">简单三步，快速安装 Image2Prompt 扩展</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    <!-- 步骤 1 -->
+                    <div class="step-card mb-8">
+                        <div class="flex items-start space-x-6">
+                            <div class="step-number">1</div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4 text-slate-900">下载扩展文件</h3>
+                                <p class="text-slate-600 mb-6">
+                                    从 GitHub 仓库下载最新的 Image2Prompt 扩展文件
+                                </p>
+                                <div class="space-y-4">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-blue-600 font-semibold">•</span>
+                                        <span class="text-slate-700">访问 GitHub 仓库：<a
+                                                href="https://github.com/pingan8787/image2prompt"
+                                                class="text-blue-600 hover:underline font-medium">https://github.com/pingan8787/image2prompt</a></span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-blue-600 font-semibold">•</span>
+                                        <span class="text-slate-700">点击 "Code" 按钮，选择 "Download ZIP"</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-blue-600 font-semibold">•</span>
+                                        <span class="text-slate-700">解压下载的 ZIP 文件到本地目录</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 步骤 2 -->
+                    <div class="step-card mb-8">
+                        <div class="flex items-start space-x-6">
+                            <div class="step-number">2</div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4 text-slate-900">开启开发者模式</h3>
+                                <p class="text-slate-600 mb-6">
+                                    在浏览器中开启开发者模式，准备安装扩展
+                                </p>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                        <h4 class="font-semibold mb-2 text-blue-800">Chrome 浏览器</h4>
+                                        <ol class="text-sm text-blue-700 space-y-1">
+                                            <li>1. 打开 <code
+                                                    class="bg-blue-100 px-2 py-1 rounded">chrome://extensions/</code>
+                                            </li>
+                                            <li>2. 开启右上角的"开发者模式"</li>
+                                            <li>3. 页面会显示更多选项</li>
+                                        </ol>
+                                    </div>
+                                    <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                                        <h4 class="font-semibold mb-2 text-purple-800">Edge 浏览器</h4>
+                                        <ol class="text-sm text-purple-700 space-y-1">
+                                            <li>1. 打开 <code
+                                                    class="bg-purple-100 px-2 py-1 rounded">edge://extensions/</code>
+                                            </li>
+                                            <li>2. 开启左下角的"开发者模式"</li>
+                                            <li>3. 页面会显示更多选项</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 步骤 3 -->
+                    <div class="step-card mb-8">
+                        <div class="flex items-start space-x-6">
+                            <div class="step-number">3</div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4 text-slate-900">加载扩展</h3>
+                                <p class="text-slate-600 mb-6">
+                                    将解压的扩展文件夹加载到浏览器中
+                                </p>
+                                <div class="space-y-4">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-blue-600 font-semibold">•</span>
+                                        <span class="text-slate-700">点击"加载已解压的扩展程序"按钮</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-blue-600 font-semibold">•</span>
+                                        <span class="text-slate-700">选择之前解压的 Image2Prompt 文件夹</span>
+                                    </div>
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-blue-600 font-semibold">•</span>
+                                        <span class="text-slate-700">扩展会自动安装并启用</span>
+                                    </div>
+                                </div>
+                                <div class="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                    <p class="text-green-800 text-sm font-medium">
+                                        ✓ 安装成功后，扩展图标会显示在浏览器工具栏中
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 配置教程 -->
+    <div id="configuration" class="tab-content">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">配置教程</h2>
+                    <p class="text-xl text-slate-600">设置 API Key 和个性化配置</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- Gemini API 配置 -->
+                    <div class="step-card">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center text-slate-900">
+                            <span
+                                class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mr-4 text-white font-bold text-xl">G</span>
+                            Gemini API 配置
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">获取 API Key</h4>
+                                <ol class="text-slate-600 space-y-2">
+                                    <li>1. 访问 <a href="https://aistudio.google.com/app/apikey"
+                                            class="text-blue-600 hover:underline font-medium">Google AI Studio</a></li>
+                                    <li>2. 使用 Google 账号登录</li>
+                                    <li>3. 点击"创建 API Key"</li>
+                                    <li>4. 复制生成的 API Key</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">配置扩展</h4>
+                                <ol class="text-slate-600 space-y-2">
+                                    <li>1. 点击浏览器工具栏的 Image2Prompt 图标</li>
+                                    <li>2. 选择"设置"选项</li>
+                                    <li>3. 在"模型选择"中选择"Gemini 2.5 Flash"</li>
+                                    <li>4. 粘贴您的 API Key</li>
+                                    <li>5. 点击"保存设置"</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 智谱 AI 配置 -->
+                    <div class="step-card">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center text-slate-900">
+                            <span
+                                class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center mr-4 text-white font-bold text-xl">智</span>
+                            智谱 AI 配置
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">获取 API Key</h4>
+                                <ol class="text-slate-600 space-y-2">
+                                    <li>1. 访问 <a href="https://docs.bigmodel.cn/cn/guide/start/model-overview"
+                                            class="text-purple-600 hover:underline font-medium">智谱 AI 开放平台</a></li>
+                                    <li>2. 注册并登录账号</li>
+                                    <li>3. 进入控制台创建 API Key</li>
+                                    <li>4. 复制生成的 API Key</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">配置扩展</h4>
+                                <ol class="text-slate-600 space-y-2">
+                                    <li>1. 打开 Image2Prompt 设置页面</li>
+                                    <li>2. 在"模型选择"中选择"智谱 GLM-4V"</li>
+                                    <li>3. 粘贴您的 API Key</li>
+                                    <li>4. 配置其他参数</li>
+                                    <li>5. 保存设置</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 高级设置 -->
+                    <div class="step-card">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-900">高级设置</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">语言设置</h4>
+                                <ul class="text-slate-600 space-y-2">
+                                    <li>• 选择生成语言</li>
+                                    <li>• 界面语言切换</li>
+                                    <li>• 自动检测语言</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">图片过滤</h4>
+                                <ul class="text-slate-600 space-y-2">
+                                    <li>• 最小尺寸限制</li>
+                                    <li>• 域名黑名单</li>
+                                    <li>• 图片格式支持</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 使用教程 -->
+    <div id="usage" class="tab-content">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">使用教程</h2>
+                    <p class="text-xl text-slate-600">掌握 Image2Prompt 的各种使用技巧</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-8">
+                    <!-- 基本使用 -->
+                    <div class="step-card">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-900">基本使用方法</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">从网页图片生成</h4>
+                                <ol class="text-slate-600 space-y-2">
+                                    <li>1. 访问任意包含图片的网页</li>
+                                    <li>2. 将鼠标悬停在图片上</li>
+                                    <li>3. 点击图片右下角的 Image2Prompt 图标</li>
+                                    <li>4. 等待生成完成</li>
+                                    <li>5. 提示词会自动复制到剪贴板</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">从本地图片生成</h4>
+                                <ol class="text-slate-600 space-y-2">
+                                    <li>1. 点击浏览器工具栏的扩展图标</li>
+                                    <li>2. 选择"设置"</li>
+                                    <li>3. 在"本地图片"区域上传图片</li>
+                                    <li>4. 点击"生成提示词"</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 高级功能 -->
+                    <div class="step-card">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-900">高级功能</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">自定义说明</h4>
+                                <p class="text-slate-600 text-sm mb-3">
+                                    在生成前添加额外说明，如"换成霓虹城市背景"
+                                </p>
+                                <div class="code-block">
+                                    原始提示词 + "换成霓虹城市背景"
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-semibold mb-3 text-slate-900">历史记录</h4>
+                                <p class="text-slate-600 text-sm mb-3">
+                                    查看和管理所有生成历史
+                                </p>
+                                <ul class="text-slate-600 text-sm space-y-1">
+                                    <li>• 按时间排序</li>
+                                    <li>• 搜索功能</li>
+                                    <li>• 重新生成</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 最佳实践 -->
+                    <div class="step-card">
+                        <h3 class="text-2xl font-bold mb-6 text-slate-900">最佳实践建议</h3>
+                        <div class="space-y-4">
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-blue-800 mb-2">💡 图片选择建议</h4>
+                                <ul class="text-blue-700 text-sm space-y-1">
+                                    <li>• 选择清晰、高质量的图片</li>
+                                    <li>• 避免过于复杂或模糊的图片</li>
+                                    <li>• 艺术风格明显的图片效果更好</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-green-800 mb-2">🎯 提示词优化</h4>
+                                <ul class="text-green-700 text-sm space-y-1">
+                                    <li>• 使用自定义模板提升效果</li>
+                                    <li>• 适当添加风格描述</li>
+                                    <li>• 根据目标平台调整格式</li>
+                                </ul>
+                            </div>
+                            <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-purple-800 mb-2">⚡ 效率提升</h4>
+                                <ul class="text-purple-700 text-sm space-y-1">
+                                    <li>• 设置默认跳转平台</li>
+                                    <li>• 使用键盘快捷键</li>
+                                    <li>• 批量处理相似图片</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 故障排除 -->
+    <div id="troubleshooting" class="tab-content">
+        <section class="section-padding">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4 text-slate-900">故障排除</h2>
+                    <p class="text-xl text-slate-600">常见问题解决方案</p>
+                </div>
+
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <!-- FAQ 项目 -->
+                    <div class="faq-item">
+                        <button
+                            class="w-full p-6 text-left flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <h3 class="text-lg font-semibold text-slate-900">扩展安装失败怎么办？</h3>
+                            <span class="text-2xl text-slate-400">+</span>
+                        </button>
+                        <div class="px-6 pb-6 text-slate-600">
+                            <p class="mb-3">请检查以下几点：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• 确保浏览器版本符合要求（Chrome 88+ 或 Edge 88+）</li>
+                                <li>• 检查是否已开启开发者模式</li>
+                                <li>• 确认扩展文件夹完整且未损坏</li>
+                                <li>• 尝试重新下载并解压文件</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button
+                            class="w-full p-6 text-left flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <h3 class="text-lg font-semibold text-slate-900">API Key 无效或过期</h3>
+                            <span class="text-2xl text-slate-400">+</span>
+                        </button>
+                        <div class="px-6 pb-6 text-slate-600">
+                            <p class="mb-3">解决方案：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• 检查 API Key 是否正确复制，无多余空格</li>
+                                <li>• 确认 API Key 仍在有效期内</li>
+                                <li>• 检查账户余额是否充足</li>
+                                <li>• 重新生成新的 API Key</li>
+                                <li>• 确保已开启相应的 API 服务</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button
+                            class="w-full p-6 text-left flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <h3 class="text-lg font-semibold text-slate-900">生成提示词质量不佳</h3>
+                            <span class="text-2xl text-slate-400">+</span>
+                        </button>
+                        <div class="px-6 pb-6 text-slate-600">
+                            <p class="mb-3">改进建议：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• 选择更清晰、高质量的源图片</li>
+                                <li>• 尝试切换到不同的 AI 模型</li>
+                                <li>• 使用自定义说明来优化结果</li>
+                                <li>• 调整提示词模板设置</li>
+                                <li>• 检查网络连接是否稳定</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button
+                            class="w-full p-6 text-left flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <h3 class="text-lg font-semibold text-slate-900">扩展按钮不显示</h3>
+                            <span class="text-2xl text-slate-400">+</span>
+                        </button>
+                        <div class="px-6 pb-6 text-slate-600">
+                            <p class="mb-3">可能原因和解决方案：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• 检查图片尺寸是否满足最小要求（默认 256×256）</li>
+                                <li>• 确认当前网站不在域名黑名单中</li>
+                                <li>• 尝试刷新页面或重启浏览器</li>
+                                <li>• 检查扩展是否已启用</li>
+                                <li>• 清除浏览器缓存后重试</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button
+                            class="w-full p-6 text-left flex justify-between items-center hover:bg-slate-50 transition-colors">
+                            <h3 class="text-lg font-semibold text-slate-900">生成速度慢或超时</h3>
+                            <span class="text-2xl text-slate-400">+</span>
+                        </button>
+                        <div class="px-6 pb-6 text-slate-600">
+                            <p class="mb-3">优化方法：</p>
+                            <ul class="space-y-2 text-sm">
+                                <li>• 检查网络连接速度和稳定性</li>
+                                <li>• 尝试切换到响应更快的 AI 模型</li>
+                                <li>• 避免在高峰期使用</li>
+                                <li>• 检查 API 提供商的服务状态</li>
+                                <li>• 考虑升级 API 套餐以获得更好性能</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 联系支持 -->
+                    <div class="step-card text-center">
+                        <h3 class="text-2xl font-bold mb-4 text-slate-900">需要更多帮助？</h3>
+                        <p class="text-slate-600 mb-6">
+                            如果您遇到其他问题或需要技术支持，请通过以下方式联系我们
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                            <a href="https://github.com/pingan8787/image2prompt/issues" class="btn-primary">
+                                🐙 GitHub Issues
+                            </a>
+                            <a href="https://x.com/Chris1993Coding" class="btn-secondary">
+                                🐦 Twitter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 立即开始 -->
+    <section class="section-padding bg-slate-50">
+        <div class="container">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="bg-white rounded-3xl p-12 border border-slate-200 shadow-lg">
+                    <h2 class="text-4xl font-bold mb-6 text-slate-900">准备好开始了吗？</h2>
+                    <p class="text-xl text-slate-600 mb-8">
+                        按照指南完成安装和配置，开始您的 AI 创作之旅
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="guide.html#installation" class="btn-primary text-lg px-8 py-4">
+                            🚀 立即安装扩展
+                        </a>
+                        <a href="features.html" class="btn-secondary text-lg px-8 py-4">
+                            查看功能介绍 →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="container">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-gradient mb-4">Image2Prompt</h3>
+                <p class="text-slate-600 mb-6">为创作者、设计师和 AI 用户设计的专业工具</p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://github.com/pingan8787/image2prompt"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M12 .5C5.648.5.5 5.648.5 12c0 5.086 3.292 9.392 7.865 10.918.575.101.785-.249.785-.553 0-.272-.01-1.176-.016-2.133-3.2.696-3.877-1.371-3.877-1.371-.523-1.331-1.277-1.686-1.277-1.686-1.044-.714.079-.699.079-.699 1.155.081 1.764 1.186 1.764 1.186 1.027 1.76 2.695 1.252 3.352.958.104-.744.402-1.252.731-1.54-2.554-.291-5.238-1.277-5.238-5.682 0-1.255.446-2.281 1.178-3.086-.118-.29-.51-1.461.111-3.047 0 0 .962-.308 3.154 1.178a10.95 10.95 0 0 1 2.872-.386c.974.005 1.955.132 2.873.386 2.19-1.486 3.15-1.178 3.15-1.178.624 1.586.232 2.757.115 3.047.734.805 1.176 1.831 1.176 3.086 0 4.416-2.69 5.388-5.258 5.675.414.356.78 1.056.78 2.131 0 1.538-.014 2.777-.014 3.154 0 .307.208.66.79.548C20.213 21.387 23.5 17.083 23.5 12c0-6.352-5.148-11.5-11.5-11.5Z" />
+                        </svg>
+                        <span class="text-lg font-medium">GitHub</span>
+                    </a>
+                    <a href="https://x.com/Chris1993Coding"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 0 0 1.88-2.37 8.6 8.6 0 0 1-2.74 1.05 4.28 4.28 0 0 0-7.29 3.9A12.15 12.15 0 0 1 4 4.4a4.29 4.29 0 0 0 1.33 5.72 4.26 4.26 0 0 1-1.94-.54v.05a4.28 4.28 0 0 0 3.44 4.19c-.45.12-.92.18-1.4.07a4.29 4.29 0 0 0 4 2.98 8.6 8.6 0 0 1-5.33 1.84c-.35 0-.7-.02-1.04-.06A12.12 12.12 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.35-.01-.53A8.4 8.4 0 0 0 22.46 6Z" />
+                        </svg>
+                        <span class="text-lg font-medium">Twitter</span>
+                    </a>
+                    <a href="https://wisemindai.app/" class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor"
+                            stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M9 4.5c-1.657 0-3 1.343-3 3v1.5c-1.105.5-2 1.65-2 3.2C4 15.5 6.239 18 9 18v3l3-1.5 3 1.5v-3c2.761 0 5-2.5 5-5.8 0-1.55-.895-2.7-2-3.2V7.5c0-1.657-1.343-3-3-3" />
+                            <path d="M9 8h.5M9 11h.5M15 8h-.5M15 11h-.5" />
+                        </svg>
+                        <span class="text-lg font-medium">WiseMindAI</span>
+                    </a>
+                </div>
+                <p class="text-slate-500 text-sm">
+                    © 2025 Image2Prompt. 开源免费，永久使用。
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+
+</html>

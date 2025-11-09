@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - Image2Prompt</title>
+    <meta name="description"
+        content="Explore every capability of Image2Prompt, from multi-model support and multilingual output to custom templates and automation.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Animation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #0f172a;
+            top: 0 !important;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #dc2626);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+        
+        .nav-link {
+            color: #475569;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease-in-out;
+            text-decoration: none;
+        }
+        
+        .nav-link:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+        
+        .nav-link.active {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+        
+        .feature-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.2s ease-in-out;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-color: #cbd5e1;
+            transform: translateY(-4px);
+        }
+        
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .section-padding {
+            padding: 80px 0;
+        }
+        
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+    </style>
+</head>
+<body data-page="features" data-language="en">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-sm border-b border-slate-200">
+        <div class="container">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index-en.html" class="text-xl font-bold text-gradient">Image2Prompt</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="index-en.html" class="nav-link">Home</a>
+                    <a href="features-en.html" class="nav-link active">Features</a>
+                    <a href="guide-en.html" class="nav-link">Guide</a>
+                    <a href="https://github.com/pingan8787/image2prompt" class="nav-link">GitHub</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <select class="language-select bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm font-medium"
+                        aria-label="Language selector">
+                        <option value="zh-CN">中文</option>
+                        <option value="en" selected>English</option>
+                    </select>
+                    <a href="guide-en.html#installation" class="btn-primary">
+                        Install Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero -->
+    <section class="pt-32 pb-16">
+        <div class="container">
+            <div class="text-center animate-fade-in">
+                <h1 class="text-5xl font-black mb-6">
+                    <span class="gradient-text">Feature Overview</span>
+                </h1>
+                <p class="text-xl text-slate-600 max-w-3xl mx-auto">
+                    Image2Prompt delivers an end-to-end workflow for turning images into prompts—multi-model support,
+                    multilingual output, granular controls, and professional automation.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Core Features -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card">
+                    <div class="feature-icon">🧩</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Model Picker</h3>
+                    <p class="text-slate-600 mb-4">Switch between top-tier AI models for any scenario.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Gemini 2.5 Flash — high-speed results</li>
+                        <li>• GLM-4V — optimized for Chinese</li>
+                        <li>• Independent API key control</li>
+                        <li>• In-app performance comparison</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Multi-model</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌏</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Multilingual Output</h3>
+                    <p class="text-slate-600 mb-4">Serve global teams with 20+ languages.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Chinese, English, Japanese, Korean</li>
+                        <li>• German, French, Spanish</li>
+                        <li>• Arabic, Russian, and more</li>
+                        <li>• Automatic language detection</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Internationalization</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📐</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Image Size Filter</h3>
+                    <p class="text-slate-600 mb-4">Skip low-quality assets automatically.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Minimum size limit (default 256×256)</li>
+                        <li>• Custom dimension rules</li>
+                        <li>• Ignores tiny icons and badges</li>
+                        <li>• Guarantees better prompt fidelity</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Smart Filtering</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🕘</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Generation History</h3>
+                    <p class="text-slate-600 mb-4">Track every prompt you have produced.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Local history storage</li>
+                        <li>• Timeline sorting</li>
+                        <li>• Search & filtering</li>
+                        <li>• One-click regenerate</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">History Controls</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🛸</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Platform Shortcuts</h3>
+                    <p class="text-slate-600 mb-4">Jump directly into your favorite AI platforms.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Ideogram, Keling, Doubao</li>
+                        <li>• Add your own platforms</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Integrations</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Prompt Templates</h3>
+                    <p class="text-slate-600 mb-4">Design reusable prompt blueprints.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Ready-to-use presets</li>
+                        <li>• Full custom editor</li>
+                        <li>• Import & export</li>
+                        <li>• Community sharing</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Templates</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">✏️</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Custom Notes</h3>
+                    <p class="text-slate-600 mb-4">Add creative direction before generating.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Optional instructions field</li>
+                        <li>• Real-time preview</li>
+                        <li>• Handles complex commands</li>
+                        <li>• Perfect for art direction</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Precision</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">International UI</h3>
+                    <p class="text-slate-600 mb-4">Localized interface built-in.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• English & Chinese UI</li>
+                        <li>• Consistent terminology</li>
+                        <li>• Regional date/time formats</li>
+                        <li>• Ready for global rollouts</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Localization</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🪶</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Lightweight UI</h3>
+                    <p class="text-slate-600 mb-4">Smooth interactions even on low-end devices.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Instant install (2 MB)</li>
+                        <li>• No heavy dependencies</li>
+                        <li>• Optimized animation pipeline</li>
+                        <li>• Works offline once loaded</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Performance</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🖼️</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Aspect Ratio Presets</h3>
+                    <p class="text-slate-600 mb-4">Keep prompts aligned with target output.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Popular ratios built-in</li>
+                        <li>• Custom ratio entries</li>
+                        <li>• Works with every model</li>
+                        <li>• Saves per template</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Composition</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚫</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Domain Filtering</h3>
+                    <p class="text-slate-600 mb-4">Ignore sites you do not want to process.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Domain allow/deny lists</li>
+                        <li>• Team policy presets</li>
+                        <li>• Visual indicator on blocked sites</li>
+                        <li>• Easy to share configs</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Control</span>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🖥️</div>
+                    <h3 class="text-xl font-bold mb-4 text-slate-900">Local Image Support</h3>
+                    <p class="text-slate-600 mb-4">Upload any file directly from your computer.</p>
+                    <ul class="text-sm text-slate-600 space-y-2 mb-4">
+                        <li>• Drag-and-drop upload</li>
+                        <li>• Batch processing</li>
+                        <li>• Local preview & cropping</li>
+                        <li>• Instant copy to clipboard</li>
+                    </ul>
+                    <div>
+                        <span class="tech-badge">Flexibility</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Technical Specs -->
+    <section class="section-padding bg-white">
+        <div class="container">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold mb-4 text-slate-900">Technical Specs</h2>
+                <p class="text-xl text-slate-600">Everything you need to run Image2Prompt smoothly</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="card p-8">
+                    <h3 class="text-xl font-bold mb-6 text-slate-900">System Requirements</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-slate-600">Browsers:</span>
+                            <span class="text-slate-900 font-medium">Chrome 88+, Edge 88+</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-slate-600">Operating Systems:</span>
+                            <span class="text-slate-900 font-medium">Windows, macOS, Linux</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-slate-600">Memory:</span>
+                            <span class="text-slate-900 font-medium">Minimum 4 GB RAM</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-slate-600">Network:</span>
+                            <span class="text-slate-900 font-medium">Stable internet required</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card p-8">
+                    <h3 class="text-xl font-bold mb-6 text-slate-900">API Integrations</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-slate-600">Gemini API:</span>
+                            <span class="text-slate-900 font-medium">Google AI Studio</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-slate-600">Zhipu AI:</span>
+                            <span class="text-slate-900 font-medium">Open Platform API</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2 border-b border-slate-100">
+                            <span class="text-slate-600">Rate Limits:</span>
+                            <span class="text-slate-900 font-medium">Defined by providers</span>
+                        </div>
+                        <div class="flex justify-between items-center py-2">
+                            <span class="text-slate-600">Data Security:</span>
+                            <span class="text-slate-900 font-medium">Local-first processing</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA -->
+    <section class="section-padding bg-slate-50">
+        <div class="container">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="bg-white rounded-3xl p-12 border border-slate-200 shadow-lg">
+                    <h2 class="text-4xl font-bold mb-6 text-slate-900">Unlock the full toolkit</h2>
+                    <p class="text-xl text-slate-600 mb-8">
+                        Install Image2Prompt and experience the most flexible prompt workflow.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="guide-en.html#installation" class="btn-primary text-lg px-8 py-4">
+                            🚀 Install Extension
+                        </a>
+                        <a href="guide-en.html" class="btn-secondary text-lg px-8 py-4">
+                            View Setup Guide →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="container">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-gradient mb-4">Image2Prompt</h3>
+                <p class="text-slate-600 mb-6">Purpose-built for creators, designers, and AI professionals.</p>
+                <div class="flex justify-center space-x-6 mb-6">
+                    <a href="https://github.com/pingan8787/image2prompt"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M12 .5C5.648.5.5 5.648.5 12c0 5.086 3.292 9.392 7.865 10.918.575.101.785-.249.785-.553 0-.272-.01-1.176-.016-2.133-3.2.696-3.877-1.371-3.877-1.371-.523-1.331-1.277-1.686-1.277-1.686-1.044-.714.079-.699.079-.699 1.155.081 1.764 1.186 1.764 1.186 1.027 1.76 2.695 1.252 3.352.958.104-.744.402-1.252.731-1.54-2.554-.291-5.238-1.277-5.238-5.682 0-1.255.446-2.281 1.178-3.086-.118-.29-.51-1.461.111-3.047 0 0 .962-.308 3.154 1.178a10.95 10.95 0 0 1 2.872-.386c.974.005 1.955.132 2.873.386 2.19-1.486 3.15-1.178 3.15-1.178.624 1.586.232 2.757.115 3.047.734.805 1.176 1.831 1.176 3.086 0 4.416-2.69 5.388-5.258 5.675.414.356.78 1.056.78 2.131 0 1.538-.014 2.777-.014 3.154 0 .307.208.66.79.548C20.213 21.387 23.5 17.083 23.5 12c0-6.352-5.148-11.5-11.5-11.5Z" />
+                        </svg>
+                        <span class="text-lg font-medium">GitHub</span>
+                    </a>
+                    <a href="https://x.com/Chris1993Coding"
+                        class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M22.46 6c-.77.35-1.6.58-2.46.69a4.3 4.3 0 0 0 1.88-2.37 8.6 8.6 0 0 1-2.74 1.05 4.28 4.28 0 0 0-7.29 3.9A12.15 12.15 0 0 1 4 4.4a4.29 4.29 0 0 0 1.33 5.72 4.26 4.26 0 0 1-1.94-.54v.05a4.28 4.28 0 0 0 3.44 4.19c-.45.12-.92.18-1.4.07a4.29 4.29 0 0 0 4 2.98 8.6 8.6 0 0 1-5.33 1.84c-.35 0-.7-.02-1.04-.06A12.12 12.12 0 0 0 8.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18 0-.35-.01-.53A8.4 8.4 0 0 0 22.46 6Z" />
+                        </svg>
+                        <span class="text-lg font-medium">Twitter</span>
+                    </a>
+                    <a href="https://wisemindai.app/" class="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true" stroke="currentColor"
+                            stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M9 4.5c-1.657 0-3 1.343-3 3v1.5c-1.105.5-2 1.65-2 3.2C4 15.5 6.239 18 9 18v3l3-1.5 3 1.5v-3c2.761 0 5-2.5 5-5.8 0-1.55-.895-2.7-2-3.2V7.5c0-1.657-1.343-3-3-3" />
+                            <path d="M9 8h.5M9 11h.5M15 8h-.5M15 11h-.5" />
+                        </svg>
+                        <span class="text-lg font-medium">WiseMindAI</span>
+                    </a>
+                </div>
+                <p class="text-slate-500 text-sm">
+                    © 2025 Image2Prompt. Open-source and free forever.
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
